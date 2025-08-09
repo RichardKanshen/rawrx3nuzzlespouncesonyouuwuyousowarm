@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>
+    const urls = [
+      "https://furrycdn.org/img/view/2021/2/4/66119.png",
+      "https://furrycdn.org/img/view/2020/8/28/22401.jpg",
+      "https://furrycdn.org/img/view/2025/2/18/418089.jpg",
+      "https://furrycdn.org/img/view/2025/3/14/425438.png",
+      "https://furrycdn.org/img/view/2025/2/19/418443.png",
+      "https://furrycdn.org/img/view/2025/2/18/418103.jpg",
+      "https://furrycdn.org/img/view/2025/1/26/410478.png",
+      "https://furrycdn.org/img/view/2025/2/19/418406.jpg",
+      "https://furrycdn.org/img/view/2025/1/26/410387.jpg",
+      "https://furrycdn.org/img/view/2025/1/26/410477.jpg",
+      "https://furrycdn.org/img/view/2025/1/26/410472.jpg",
+      "https://furrycdn.org/img/view/2020/7/16/8945.png",
+      "https://furrycdn.org/img/view/2025/2/18/418092.jpg",
+      "https://furrycdn.org/img/view/2025/2/19/418347.png",
+      "https://furrycdn.org/img/view/2025/2/18/418061.jpg",
+      "https://furrycdn.org/img/view/2025/2/18/418056.jpg",
+      "https://furrycdn.org/img/view/2025/2/18/418071.jpg"
+    ];
+
+    const storageKey = "redirectURL";
+
+    function getRandomUrl() {
+      return urls[Math.min(Math.floor(Math.random() * urls.length), urls.length - 1)];
+    }
+
+    function redirect() {
+      let url = localStorage.getItem(storageKey);
+
+      if (location.hash === "#qr" || !url) {
+        url = getRandomUrl();
+        localStorage.setItem(storageKey, url);
+
+        history.replaceState(null, "", location.pathname + location.search);
+      }
+
+      location.href = url;
+    }
+
+    redirect();
+  </script>
+</head>
+<body></body>
+</html>
