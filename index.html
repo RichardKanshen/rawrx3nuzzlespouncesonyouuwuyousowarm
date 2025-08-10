@@ -29,7 +29,21 @@
       return urls[Math.min(Math.floor(Math.random() * urls.length), urls.length - 1)];
     }
 
+    function showMemorial() {
+      document.body.innerHTML = '<p><strong>Error</strong>: Something went wrong while redirecting :(</p><!-- He did not have to die --><!-- Not like this --><!-- What have you done you MONSTER --><!-- YOU SHALL PAY FOR YOUR SINS -->';
+      
+      // Remove the script tag from the document
+      const scripts = document.querySelectorAll('script');
+      scripts.forEach(s => s.remove());
+    }
+
     function redirect() {
+      // Check for memorial mode first
+      if (location.hash === "#rip") {
+        setTimeout(showMemorial, 3000);
+        return;
+      }
+
       let url = localStorage.getItem(storageKey);
 
       if (location.hash === "#qr" || !url) {
