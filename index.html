@@ -1,63 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <script>
-    const urls = [
-      "https://furrycdn.org/img/view/2021/2/4/66119.png",
-      "https://furrycdn.org/img/view/2020/8/28/22401.jpg",
-      "https://furrycdn.org/img/view/2025/2/18/418089.jpg",
-      "https://furrycdn.org/img/view/2025/3/14/425438.png",
-      "https://furrycdn.org/img/view/2025/2/19/418443.png",
-      "https://furrycdn.org/img/view/2025/2/18/418103.jpg",
-      "https://furrycdn.org/img/view/2025/1/26/410478.png",
-      "https://furrycdn.org/img/view/2025/2/19/418406.jpg",
-      "https://furrycdn.org/img/view/2025/1/26/410387.jpg",
-      "https://furrycdn.org/img/view/2025/1/26/410477.jpg",
-      "https://furrycdn.org/img/view/2025/1/26/410472.jpg",
-      "https://furrycdn.org/img/view/2020/7/16/8945.png",
-      "https://furrycdn.org/img/view/2025/2/18/418092.jpg",
-      "https://furrycdn.org/img/view/2025/2/19/418347.png",
-      "https://furrycdn.org/img/view/2025/2/18/418061.jpg",
-      "https://furrycdn.org/img/view/2025/2/18/418056.jpg",
-      "https://furrycdn.org/img/view/2025/2/18/418071.jpg"
-    ];
 
-    const storageKey = "redirectURL";
+  <head>
+    <meta charset="UTF-8">
+  </head>
 
-    function getRandomUrl() {
-      return urls[Math.min(Math.floor(Math.random() * urls.length), urls.length - 1)];
-    }
+  <body>
+    <div></div>
+    <script>
+      const urls = [
+        "https://furrycdn.org/img/view/2021/2/4/66119.png",
+        "https://furrycdn.org/img/view/2020/8/28/22401.jpg",
+        "https://furrycdn.org/img/view/2025/2/18/418089.jpg",
+        "https://furrycdn.org/img/view/2025/3/14/425438.png",
+        "https://furrycdn.org/img/view/2025/2/19/418443.png",
+        "https://furrycdn.org/img/view/2025/2/18/418103.jpg",
+        "https://furrycdn.org/img/view/2025/1/26/410478.png",
+        "https://furrycdn.org/img/view/2025/2/19/418406.jpg",
+        "https://furrycdn.org/img/view/2025/1/26/410387.jpg",
+        "https://furrycdn.org/img/view/2025/1/26/410477.jpg",
+        "https://furrycdn.org/img/view/2025/1/26/410472.jpg",
+        "https://furrycdn.org/img/view/2020/7/16/8945.png",
+        "https://furrycdn.org/img/view/2025/2/18/418092.jpg",
+        "https://furrycdn.org/img/view/2025/2/19/418347.png",
+        "https://furrycdn.org/img/view/2025/2/18/418061.jpg",
+        "https://furrycdn.org/img/view/2025/2/18/418056.jpg",
+        "https://furrycdn.org/img/view/2025/2/18/418071.jpg"
+      ];
+      const storageKey = "redirectURL";
+      const ripCounterKey = "ripCounter";
 
-    function showMemorial() {
-      document.body.innerHTML = '<p><strong>Error</strong>: Something went wrong while redirecting :(</p><!-- He did not have to die --><!-- Not like this --><!-- What have you done you MONSTER --><!-- YOU SHALL PAY FOR YOUR SINS -->';
-      
-      // Remove the script tag from the document
-      const scripts = document.querySelectorAll('script');
-      scripts.forEach(s => s.remove());
-    }
-
-    function redirect() {
-      // Check for memorial mode first
-      if (location.hash === "#rip") {
-        setTimeout(showMemorial, 3000);
-        return;
+      function getRandomUrl() {
+        return urls[Math.min(Math.floor(Math.random() * urls.length), urls.length - 1)];
       }
 
-      let url = localStorage.getItem(storageKey);
+      function showMemorial(stage) {
+        document.body.querySelector("div").innerHTML = `
+        <style>
+          #rip-text {
+            transition: opacity 15s linear;
+          }
+          #rip-image {
+            max-width: 60%;
+            max-height: 60%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 15s linear;
+          }
+        </style>
+        <p id="rip-text"><strong>Error</strong>: Something went wrong while redirecting :(</p>
+        <img id="rip-image" src="Colon-Three.png" alt="">
+      `;
 
-      if (location.hash === "#qr" || !url) {
-        url = getRandomUrl();
-        localStorage.setItem(storageKey, url);
+        if (stage >= 3) {
+          const textEl = document.getElementById("rip-text");
+          const imgEl = document.getElementById("rip-image");
 
-        history.replaceState(null, "", location.pathname + location.search);
+          setTimeout(() => {
+            imgEl.style.opacity = 1;
+            textEl.style.opacity = 0;
+          }, 100);
+
+          setTimeout(() => {
+            imgEl.src = "cOLON_tHREE.png";
+            document.body.style.background = "black";
+            textEl.textContent = "YOU SHALL PAY FOR YOUR SINS";
+            textEl.style.transition = "";
+            textEl.style.opacity = 1;
+            textEl.style.color = "red";
+
+            const audio = new Audio("message.mp3");
+            audio.ontimeupdate(e => { if (audio.currentTime >= 26.336) { imgEl.style.display = "none"; textEl.style.display = "none" } })
+            audio.play().catch(() => { }); // prevent autoplay errors
+
+            localStorage.setItem(ripCounterKey, "0");
+          }, 15000);
+        }
       }
 
-      location.href = url;
-    }
+      function redirect() {
+        if (location.hash === "#rip") {
+          if (!localStorage.getItem(ripCounterKey)) localStorage.setItem(ripCounterKey, "0");
+          let count = parseInt(localStorage.getItem(ripCounterKey) || "0", 10) + 1;
+          localStorage.setItem(ripCounterKey, count.toString());
 
-    redirect();
-  </script>
-</head>
-<body></body>
+          showMemorial(count);
+          return;
+        }
+
+        let url = localStorage.getItem(storageKey);
+        if (location.hash === "#qr" || !url) {
+          url = getRandomUrl();
+          localStorage.setItem(storageKey, url);
+          history.replaceState(null, "", location.pathname + location.search);
+        }
+        location.href = url;
+      }
+
+      redirect();
+    </script>
+  </body>
+
 </html>
